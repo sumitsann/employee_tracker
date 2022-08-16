@@ -1,0 +1,21 @@
+USE employeeDB;
+
+CREATE TABLE department (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(45) NULL
+);
+
+CREATE TABLE role (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(45) NULL,
+  salary DECIMAL(10.3) NULL,
+  department_id INT NULL
+);
+
+CREATE TABLE employee (
+  id INTEGER AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(45) NULL,
+  last_name VARCHAR(45) NULL,
+  role_id INT NULL,
+  manager_id INT NULL
+);
