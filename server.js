@@ -34,6 +34,64 @@ const db = mysql.createConnection(
   console.log("Connected to the election database.")
 );
 
+db.connect(function (err) {
+  if (err) {
+    console.error("Connection error : " + err.stack);
+    return;
+  }
+
+  console.log("Connected to db as id " + db.threadId);
+});
+
+const firstPrompt = () => {
+  inquirer
+    .prompt({
+      name: "task",
+      type: "list",
+      message: "Which task would you like to do?",
+      choices: [
+        "View all departments",
+        "View all roles",
+        "View all employees",
+        "Add a department",
+        "Add a role",
+        "Add an employee",
+        "Update an employee role",
+        "Exit",
+      ],
+    })
+    .then(function ({ task }) {
+      switch (task) {
+        case "View all departments":
+          viewAllDepartments();
+          break;
+        case "View all roles":
+          viewAllRoles();
+          break;
+        case "View all employees":
+          viewAllEmployees();
+          break;
+        case "Add a department":
+          addDepartment();
+          break;
+        case "Add a role":
+          addRole();
+          break;
+        case "Add an employee":
+          addEmployee();
+          break;
+        case "Update an employee role":
+          updateEmployeeRole();
+          break;
+        case "Exit":
+          db.end();
+          break;
+      }
+    });
+};
+
+firstPrompt();
+
 // start the express server on port 3001
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
