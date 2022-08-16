@@ -90,6 +90,44 @@ const firstPrompt = () => {
     });
 };
 
+function viewAllDepartments() {
+  db.query(`SELECT * FROM department`, (err, rows) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(rows);
+  });
+  firstPrompt();
+}
+
+function viewAllRoles() {
+  db.query(`SELECT * FROM role`, (err, rows) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(rows);
+  });
+  firstPrompt();
+}
+
+function viewAllEmployees() {
+  db.query(`SELECT * FROM employee`, (err, rows) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(rows);
+  });
+  firstPrompt();
+}
+
+function addDepartment() {}
+
+function addRole() {}
+
+function addEmployee() {}
+
+function updateEmployeeRole() {}
+
 firstPrompt();
 
 // start the express server on port 3001
