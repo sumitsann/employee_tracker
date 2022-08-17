@@ -60,7 +60,7 @@ function taskToDo() {
         case "Add in table":
           add();
           break;
-        case "Update Employee Table":
+        case "Update Table":
           updateEmployee();
           break;
         case "Exit":
@@ -304,11 +304,45 @@ function updateRole() {
     if (err) throw err;
 
     let employeeNames = [];
-    let roles = [];
 
     for (var i = 0; i < data.length; i++) {
       employeeNames.push(data[i].first_name);
     }
+
+    connection.query(`SELECT * FROM role`, function (err, data) {
+      if (err) throw err;
+      let roles = [];
+
+      for (var i = 0; i < data.length; i++) {
+        roles.push(data[i].title);
+      }
+
+      inquirer
+        .prompt([
+          {
+            name: "employee_id",
+            message: "Which employee role needs to be updated?",
+            type: "list",
+            choices: employeeNames,
+          },
+          {
+            name: "role_id",
+            message: "Which employee role needs to be updated?",
+            type: "list",
+            choices: roles,
+          },
+        ])
+        .then(function ({ employee_id, role_id }) {
+          connection.query(
+            `UPDATE employee SET role_id = ${roles.indexOf(role_id) + 1} WHERE 
+        id = ${employeeNames.indexOf(employee_id) + 1}`,
+            function (err, data) {
+              if (err) throw err;
+              taskToDo();
+            }
+          );
+        });
+    });
   });
 }
 
