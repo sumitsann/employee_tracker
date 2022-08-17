@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
+const db = require("./db/connection");
 
 const express = require("express");
 const PORT = process.env.PORT || 3001;
@@ -20,19 +21,6 @@ app.use((req, res) => {
 // Express middleware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
-// Connect to database
-const db = mysql.createConnection(
-  {
-    host: "localhost",
-    // Your MySQL username,
-    user: "root",
-    // Your MySQL password
-    password: "vastika123",
-    database: "employeeDB",
-  },
-  console.log("Connected to the election database.")
-);
 
 db.connect(function (err) {
   if (err) {
