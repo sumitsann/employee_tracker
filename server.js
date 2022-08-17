@@ -60,8 +60,8 @@ function taskToDo() {
         case "Add in table":
           add();
           break;
-        case "Update Table":
-          viewTables();
+        case "Update Employee Table":
+          updateEmployee();
           break;
         case "Exit":
           connection.end();
@@ -276,6 +276,43 @@ function addEmployee() {
       });
   });
 }
+
+// update to the tables
+
+function updateEmployee() {
+  inquirer
+    .prompt({
+      name: "table",
+      message: "What do you want to update for the employee?",
+      type: "list",
+      choices: ["role", "manager"],
+    })
+    .then(function ({ table }) {
+      switch (table) {
+        case "role":
+          updateRole();
+          break;
+        case "manager":
+          updateManager();
+          break;
+      }
+    });
+}
+
+function updateRole() {
+  connection.query(`SELECT * FROM employee`, function (err, data) {
+    if (err) throw err;
+
+    let employeeNames = [];
+    let roles = [];
+
+    for (var i = 0; i < data.length; i++) {
+      employeeNames.push(data[i].first_name);
+    }
+  });
+}
+
+function updateManager() {}
 
 taskToDo();
 
