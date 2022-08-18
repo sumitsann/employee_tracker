@@ -32,6 +32,11 @@ Sumit Ojha
 ## Screenshots
 
 ![](./assets/images/schema.jpg)
+![](./assets/images/Screenshot-1.jpg)
+![](./assets/images/Screenshot-2.jpg)
+![](./assets/images/Screenshot-3.jpg)
+![](./assets/images/Screenshot-4.jpg)
 
 ## Walkthrough
+
 https://www.youtube.com/watch?v=5jvJS4Vpg3Q

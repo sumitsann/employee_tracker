@@ -192,7 +192,7 @@ function addRole() {
         },
       ])
       .then(function ({ roleTitle, salary, department_id }) {
-        let departmentIndex = departmentNames.indexOf(department_id);
+        let departmentIndex = departmentNames.indexOf(department_id) + 1;
 
         connection.query(
           `INSERT INTO role (title, salary, department_id) VALUES ('${roleTitle}', '${salary}', ${departmentIndex})`,
