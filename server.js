@@ -50,7 +50,13 @@ function taskToDo() {
       name: "task",
       type: "list",
       message: "What task would you like to do?",
-      choices: ["View Tables", "Add in table", "Update Table", "Exit"],
+      choices: [
+        "View Tables",
+        "Add in table",
+        "Update Table",
+        "Delete Row",
+        "Exit",
+      ],
     })
     .then(function ({ task }) {
       switch (task) {
@@ -62,6 +68,9 @@ function taskToDo() {
           break;
         case "Update Table":
           updateEmployee();
+          break;
+        case "Delete Row":
+          deleteRow();
           break;
         case "Exit":
           connection.end();
@@ -134,7 +143,7 @@ function addDepartment() {
         `INSERT INTO department (name) VALUES ('${departmentName}')`,
         function (err, data) {
           if (err) throw err;
-          console.log(`Added`);
+          console.log(`Department Added`);
           taskToDo();
         }
       );
@@ -338,6 +347,8 @@ function updateRole() {
         id = ${employeeNames.indexOf(employee_id) + 1}`,
             function (err, data) {
               if (err) throw err;
+              console.log(`Role Updated`);
+
               taskToDo();
             }
           );
@@ -346,7 +357,155 @@ function updateRole() {
   });
 }
 
-function updateManager() {}
+function updateManager() {
+  connection.query(`SELECT * FROM employee`, function (err, data) {
+    if (err) throw err;
+    let employeeNames = [];
+    for (var i = 0; i < data.length; i++) {
+      employeeNames.push(data[i].first_name);
+    }
+    inquirer
+      .prompt([
+        {
+          name: "employee_id",
+          message: "Whom would you like to update?",
+          type: "list",
+          choices: employeeNames,
+        },
+        {
+          name: "manager_id",
+          message: "Who is the manager?",
+          type: "list",
+          choices: ["none"].concat(employeeNames),
+        },
+      ])
+      .then(function ({ employee_id, manager_id }) {
+        let managerQuery = "";
+        if (manager_id == "none") {
+          managerQuery += `UPDATE employee SET manager_id = ${null} WHERE id = ${
+            employeeNames.indexOf(employee_id) + 1
+          }`;
+        } else {
+          managerQuery += `UPDATE employee SET manager_id = ${
+            employeeNames.indexOf(manager_id) + 1
+          } WHERE id = ${employeeNames.indexOf(employee_id) + 1}`;
+        }
+        connection.query(managerQuery, function (err, data) {
+          if (err) throw err;
+          console.log(`Manager Updated`);
+
+          taskToDo();
+        });
+      });
+  });
+}
+
+// delete in the tables
+function deleteRow() {
+  inquirer
+    .prompt({
+      name: "table",
+      message: "In which table would you like to delete?",
+      type: "list",
+      choices: ["department", "role", "employee"],
+    })
+    .then(function ({ table }) {
+      switch (table) {
+        case "department":
+          deleteDepartment();
+          break;
+        case "role":
+          deleteRole();
+          break;
+        case "employee":
+          deleteEmployee();
+          break;
+      }
+    });
+}
+
+function deleteDepartment() {
+  connection.query(`SELECT * FROM department`, function (err, data) {
+    if (err) throw err;
+    let departmentNames = [];
+    for (var i = 0; i < data.length; i++) {
+      departmentNames.push(data[i].name);
+    }
+    inquirer
+      .prompt({
+        name: "id",
+        message: "What is the department name?",
+        type: "list",
+        choices: departmentNames,
+      })
+      .then(function ({ id }) {
+        connection.query(
+          `DELETE FROM department WHERE id = ${
+            departmentNames.indexOf(id) + 1
+          }`,
+          function (err, data) {
+            if (err) throw err;
+            console.log(`DELETED`);
+            taskToDo();
+          }
+        );
+      });
+  });
+}
+
+function deleteRole() {
+  connection.query(`SELECT * FROM role`, function (err, data) {
+    if (err) throw err;
+    let roleTitle = [];
+    for (var i = 0; i < data.length; i++) {
+      roleTitle.push(data[i].title);
+    }
+    inquirer
+      .prompt({
+        name: "id",
+        message: "What is the role name?",
+        type: "list",
+        choices: roleTitle,
+      })
+      .then(function ({ id }) {
+        connection.query(
+          `DELETE FROM role WHERE id = ${roleTitle.indexOf(id) + 1}`,
+          function (err, data) {
+            if (err) throw err;
+            console.log(`DELETED`);
+            taskToDo();
+          }
+        );
+      });
+  });
+}
+
+function deleteEmployee() {
+  connection.query(`SELECT * FROM employee`, function (err, data) {
+    if (err) throw err;
+    let employeeNames = [];
+    for (var i = 0; i < data.length; i++) {
+      employeeNames.push(data[i].first_name);
+    }
+    inquirer
+      .prompt({
+        name: "id",
+        message: "What is the employee name?",
+        type: "list",
+        choices: employeeNames,
+      })
+      .then(function ({ id }) {
+        connection.query(
+          `DELETE FROM employee WHERE id = ${employeeNames.indexOf(id) + 1}`,
+          function (err, data) {
+            if (err) throw err;
+            console.log(`DELETED`);
+            taskToDo();
+          }
+        );
+      });
+  });
+}
 
 taskToDo();
 
